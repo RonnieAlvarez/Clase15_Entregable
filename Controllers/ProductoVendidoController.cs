@@ -24,12 +24,20 @@ namespace Clase15_Entregable.Controllers
             else return productoVBuscado;
         }
 
+        [HttpGet("ListarProductoVendidoXId/{idUsuario:int}/{idProducto:int}")]
+        public ActionResult<List<ProductoVendidoDTO>> ListarProductoXId(int idUsuario, int idProducto)
+        {
+            if (idUsuario < 0) return BadRequest(new { message = $"El id no puede ser negativo ", StatusCode = 400 });
+            List<ProductoVendidoDTO>? productoVBuscado = productoVendidoService.ListarProductosVendidosXId(idUsuario,idProducto);
+            if (productoVBuscado is null) return BadRequest(new { message = $"El Producto no existe ", StatusCode = 400 });
+            else return productoVBuscado;
+        }
+
         [HttpGet("ObtenerProductosVendidos")]
         public ActionResult<List<ProductoVendido>> ObtenerProductosVendidos()
         {
-            List<ProductoVendido> resultado = new List<ProductoVendido>();
-            resultado = productoVendidoService.ListarTodosLosProductosVendidos();
-            if (resultado.Count > 0) { return resultado; }
+            var resultado = productoVendidoService.ListarTodosLosProductosVendidos();
+            if (resultado.Count > 0 || resultado is not null) { return resultado; }
             else
                 return BadRequest(new { message = $"No existen productos en esta lista ", StatusCode = 400 });
         }
@@ -42,7 +50,6 @@ namespace Clase15_Entregable.Controllers
             if (productoVBuscado is null) return BadRequest(new { message = $"El Producto no existe ", StatusCode = 400 });
             productoVendidoService.EliminarProductoVendidoPorId(productoVBuscado);
             return Ok(new { message = $"Producto {id} eliminado exitosamente", StatusCode = 200 });
-
         }
       
         [HttpPost("AgregarProductoVendido")]

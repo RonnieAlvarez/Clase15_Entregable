@@ -19,16 +19,16 @@ namespace Clase15_Entregable.Controllers
         }
 
         [HttpGet("obtenerUsuarioXId")]
-        public ActionResult<Ventum> obtenerUsuarioXId(int id)
+        public ActionResult<Usuario> obtenerUsuarioXId(int id)
         {
             if (id < 0) return BadRequest(new { message = $"El id no puede ser negativo ", StatusCode = 400 });
-            Ventum? usuarioBuscado = usuarioService.ObtenerUsuarioXId(id);
+            var usuarioBuscado = usuarioService.ObtenerUsuarioXId(id);
             if (usuarioBuscado is null) return BadRequest(new { message = $"El Usuario no existe ", StatusCode = 400 });
             else return usuarioBuscado;
         }
 
         [HttpGet("obtenerTodosLosUsuarios")]
-        public ActionResult<List<Ventum>> obtenerTodosLosUsuarios()
+        public ActionResult<List<Usuario>> obtenerTodosLosUsuarios()
         {
             var resultado = usuarioService.ObtenerTodosLosUsuarios();
             if (resultado.Count > 0)  return resultado; 
@@ -36,7 +36,7 @@ namespace Clase15_Entregable.Controllers
         }
 
         [HttpDelete("BorrarUsuarioXId")]
-        public ActionResult<Ventum> BorrarUsuarioXId(int id)
+        public ActionResult<Usuario> BorrarUsuarioXId(int id)
         {
             if (id < 0) return BadRequest(new { message = $"El id no puede ser negativo ", StatusCode = 400 });
             var usuarioBuscado = usuarioService.ObtenerUsuarioXId(id);
@@ -46,20 +46,20 @@ namespace Clase15_Entregable.Controllers
         }
 
         [HttpPost("AgregarUsuario")]
-        public ActionResult<VentaDTO> AgregarUsuario([FromBody] VentaDTO usuarioDto)
+        public ActionResult<UsuarioDTO> AgregarUsuario([FromBody] UsuarioDTO usuarioDto)
         {
             if (usuarioDto is null) return BadRequest(new { message = $"El usuario no puede estar vacio.", StatusCode = 400 });
-            Ventum usuario = UsuarioMapper.MappearDtoToUser(usuarioDto);
+            Usuario usuario = UsuarioMapper.MappearDtoToUser(usuarioDto);
             usuarioService.AgregarUsuario(usuario);
             return Ok(new { message = $"Usuario {usuario.Id} Agregado exitosamente", StatusCode = 200 });
 
         }
 
         [HttpPut("ModificarUsuario")]
-        public ActionResult<VentaDTO> ModificarUsuario([FromBody] VentaDTO usuarioDto)
+        public ActionResult<UsuarioDTO> ModificarUsuario([FromBody] UsuarioDTO usuarioDto)
         {
             if (usuarioDto is null) return BadRequest(new { message = $"El usuario no puede estar vacio.", StatusCode = 400 });
-            Ventum usuario = UsuarioMapper.MappearDtoToUser(usuarioDto);
+            Usuario usuario = UsuarioMapper.MappearDtoToUser(usuarioDto);
             usuarioService.ModificarUsuario(usuario);
             return Ok(new { message = $"Usuario {usuario.Id} Modificado exitosamente", StatusCode = 200 });
         }

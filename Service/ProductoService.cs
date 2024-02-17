@@ -2,6 +2,7 @@
 using Clase15_Entregable.DTOs;
 using Clase15_Entregable.Mapper;
 using Clase15_Entregable.models;
+using System.Diagnostics.Eventing.Reader;
 
 namespace Clase15_Entregable.Service
 {
@@ -19,9 +20,13 @@ namespace Clase15_Entregable.Service
             return coderContext.Productos.ToList();
         }
 
-        public Producto? ObtenerProductoXId(int id)
+        public Producto ObtenerProductoXId(int id)
         {
-            return coderContext.Productos.FirstOrDefault(u => u.Id == id);
+            var resultado = coderContext.Productos.FirstOrDefault(u => u.Id == id);
+            if (resultado == null) 
+                return resultado = new Producto();
+            else
+                    return resultado;
         }
 
         public bool EliminarProductoPorId(Producto producto)

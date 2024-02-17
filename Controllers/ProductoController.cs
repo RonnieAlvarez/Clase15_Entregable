@@ -21,7 +21,7 @@ namespace Clase15_Entregable.Controllers
         public ActionResult<Producto> obtenerProductoXId(int id)
         {
             if (id < 0) return BadRequest(new { message = $"El id no puede ser negativo ", StatusCode = 400 });
-            Producto? productoBuscado = productoService.ObtenerProductoXId(id);
+            var productoBuscado = productoService.ObtenerProductoXId(id);
             if (productoBuscado is null) return BadRequest(new { message = $"El Producto no existe ", StatusCode = 400 });
             else return productoBuscado;
         }
