@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Clase15_Entregable.models
+namespace Proyecto_Final_API_SDG.models
 {
     public partial class ProductoVendido
     {

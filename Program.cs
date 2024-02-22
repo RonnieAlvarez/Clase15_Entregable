@@ -1,9 +1,8 @@
-using Clase15_Entregable.database;
-using Clase15_Entregable.Service;
+using Proyecto_Final_API_SDG.Service;
 using Microsoft.EntityFrameworkCore;
-using System.Data.Common;
+using Proyecto_Final_API_SDG.database;
 
-namespace Clase15_Entregable
+namespace Proyecto_Final_API_SDG
 {
     public class Program
     {
@@ -27,6 +26,15 @@ namespace Clase15_Entregable
             builder.Services.AddScoped<ProductoService>();
             builder.Services.AddScoped<ProductoVendidoService>();
             builder.Services.AddScoped<VentaService>();
+            builder.Services.AddCors(options=>
+            {
+                options.AddDefaultPolicy(policy =>
+                {
+                    policy.AllowAnyHeader();
+                    policy.AllowAnyMethod();
+                    policy.AllowAnyOrigin();
+                });
+            });
 
             var app = builder.Build();
 
@@ -37,10 +45,11 @@ namespace Clase15_Entregable
                 app.UseSwaggerUI();
             }
 
+            app.UseCors();
+
             app.UseHttpsRedirection();
 
-            app.UseAuthorization();
-
+           // app.UseAuthorization();
 
             app.MapControllers();
 

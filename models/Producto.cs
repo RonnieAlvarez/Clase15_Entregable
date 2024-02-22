@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
-namespace Clase15_Entregable.models
+namespace Proyecto_Final_API_SDG.models
 {
     public partial class Producto
     {

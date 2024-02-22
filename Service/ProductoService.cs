@@ -1,10 +1,10 @@
-﻿using Clase15_Entregable.database;
-using Clase15_Entregable.DTOs;
-using Clase15_Entregable.Mapper;
-using Clase15_Entregable.models;
+﻿using Proyecto_Final_API_SDG.DTOs;
+using Proyecto_Final_API_SDG.Mapper;
+using Proyecto_Final_API_SDG.models;
+using Proyecto_Final_API_SDG.database;
 using System.Diagnostics.Eventing.Reader;
 
-namespace Clase15_Entregable.Service
+namespace Proyecto_Final_API_SDG.Service
 {
     public class ProductoService
     {
@@ -20,18 +20,26 @@ namespace Clase15_Entregable.Service
             return coderContext.Productos.ToList();
         }
 
-        public Producto ObtenerProductoXId(int id)
+        public List<ProductoDTO> ObtenerProductoXIdUsuario(int id)
         {
-            var resultado = coderContext.Productos.FirstOrDefault(u => u.Id == id);
-            if (resultado == null) 
-                return resultado = new Producto();
-            else
-                    return resultado;
+            var lista = coderContext.Productos.ToList();
+            List<ProductoDTO> listadoxID = new List<ProductoDTO>();
+            foreach (var item in lista)
+            {
+                if (item.IdUsuario == id)
+                {
+                    ProductoDTO lProducto = ProductoMapper.MappearProdToDto(item);
+                    listadoxID.Add(lProducto);
+                }
+            }
+                return listadoxID;
         }
 
-        public bool EliminarProductoPorId(Producto producto)
+        public bool EliminarProductoPorId(int id)
         {
-            coderContext.Productos.Remove(producto);
+            Producto? resultado = coderContext.Productos.FirstOrDefault(u => u.Id == id);
+            if (resultado == null) return false;
+            coderContext.Productos.Remove(resultado);
             coderContext.SaveChanges();
             return true;
         }

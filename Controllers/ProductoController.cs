@@ -1,11 +1,11 @@
-﻿using Clase15_Entregable.database;
-using Clase15_Entregable.models;
-using Clase15_Entregable.DTOs;
+﻿using Proyecto_Final_API_SDG.database;
+using Proyecto_Final_API_SDG.models;
+using Proyecto_Final_API_SDG.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
-using Clase15_Entregable.Service;
+using Proyecto_Final_API_SDG.Service;
 
-namespace Clase15_Entregable.Controllers
+namespace Proyecto_Final_API_SDG.Controllers
 {
     [ApiController]
     [Route("api/[Controller]")]
@@ -17,11 +17,11 @@ namespace Clase15_Entregable.Controllers
             this.productoService = productoService;
         }
 
-        [HttpGet("obtenerProductoXId")]
-        public ActionResult<Producto> obtenerProductoXId(int id)
+        [HttpGet("obtenerProductoXIdUsuario")]
+        public ActionResult<List<ProductoDTO>> obtenerProductoXIdUsuario(int id)
         {
             if (id < 0) return BadRequest(new { message = $"El id no puede ser negativo ", StatusCode = 400 });
-            var productoBuscado = productoService.ObtenerProductoXId(id);
+            var productoBuscado = productoService.ObtenerProductoXIdUsuario(id);
             if (productoBuscado is null) return BadRequest(new { message = $"El Producto no existe ", StatusCode = 400 });
             else return productoBuscado;
         }
@@ -39,10 +39,9 @@ namespace Clase15_Entregable.Controllers
         public ActionResult<Producto> BorrarProductoXId(int id)
         {
             if (id < 0) return BadRequest(new { message = $"El id no puede ser negativo ", StatusCode = 400 });
-            var productoBuscado = productoService.ObtenerProductoXId(id);
-            if (productoBuscado is null) return BadRequest(new { message = $"El Producto no existe ", StatusCode = 400 });
-            productoService.EliminarProductoPorId(productoBuscado);
-            return Ok(new { message = $"Producto {id} eliminado exitosamente", StatusCode = 200 });
+            if (productoService.EliminarProductoPorId(id) == true)
+                return Ok(new { message = $"Producto {id} eliminado exitosamente", StatusCode = 200 });
+            else return BadRequest(new { message = "No se pudo Borrar el Producto", StatusCode = 400 });
         }
 
         
@@ -53,7 +52,7 @@ namespace Clase15_Entregable.Controllers
             {
                 if (productoDTO is null) return BadRequest(new { message = $"El producto no puede estar vacio.", StatusCode = 400 });
                 productoService.AgregarProductos(productoDTO);
-                return Ok(new { message = $"Producto {productoDTO.Id} Agregado exitosamente", StatusCode = 200 });
+                return Ok(new { message = $"Producto {productoDTO.Descripciones} Agregado exitosamente", StatusCode = 200 });
             }
             catch (Exception ex)
             {

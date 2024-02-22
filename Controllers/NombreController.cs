@@ -1,7 +1,7 @@
-﻿using Clase15_Entregable.Service;
+﻿using Proyecto_Final_API_SDG.Service;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Clase15_Entregable.Controllers
+namespace Proyecto_Final_API_SDG.Controllers
 {
     [ApiController]
     [Route("api/[Controller]")]
@@ -10,12 +10,7 @@ namespace Clase15_Entregable.Controllers
         [HttpGet("Nombre")]
         public string ObtenerNombre()
         {
-            return "Ronnie";
-        }
-        [HttpGet("UsuarioClave")]
-        public string UsuarioClave ()
-        {
-            return "Usuario: Ronnie\nClave: 1234";
+            return "Ronnie Alvarez";
         }
     }
 }

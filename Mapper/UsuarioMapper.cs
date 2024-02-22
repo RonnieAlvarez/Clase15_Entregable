@@ -1,7 +1,7 @@
-﻿using Clase15_Entregable.DTOs;
-using Clase15_Entregable.models;
+﻿using Proyecto_Final_API_SDG.DTOs;
+using Proyecto_Final_API_SDG.models;
 
-namespace Clase15_Entregable.Mapper
+namespace Proyecto_Final_API_SDG.Mapper
 {
     public static class UsuarioMapper
     {

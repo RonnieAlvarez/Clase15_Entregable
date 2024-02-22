@@ -1,9 +1,9 @@
-﻿using Clase15_Entregable.Service;
+﻿using Proyecto_Final_API_SDG.Service;
 using Microsoft.AspNetCore.Mvc;
-using Clase15_Entregable.DTOs;
-using Clase15_Entregable.models;
+using Proyecto_Final_API_SDG.DTOs;
+using Proyecto_Final_API_SDG.models;
 
-namespace Clase15_Entregable.Controllers
+namespace Proyecto_Final_API_SDG.Controllers
 {
 
     [ApiController]
@@ -16,54 +16,29 @@ namespace Clase15_Entregable.Controllers
             this.ventaService = ventaService;
         }
 
-        [HttpGet("ObtenerVentaVendidoXId/{id:int}")]
-        public ActionResult<Ventum> ObtenerVentaXId(int id)
+        [HttpGet("ObtenerVentaXIdUsuario/{id:int}")]
+        public ActionResult<List<VentaDTO>> ObtenerVentaXIdUsuario(int id)
         {
             if (id < 0) return BadRequest(new { message = $"El id no puede ser negativo ", StatusCode = 400 });
-            Ventum? productoVBuscado = ventaService.ObtenerVentaXId(id);
+            List<VentaDTO> productoVBuscado = ventaService.ObtenerVentaXIdUsuario(id);
             if (productoVBuscado is null) return BadRequest(new { message = $"El Venta no existe ", StatusCode = 400 });
             else return productoVBuscado;
         }
 
-        [HttpGet("ObtenerVentas")]
-        public ActionResult<List<Ventum>> ObtenerVentas()
-        {
-            List<Ventum> resultado = new List<Ventum>();
-            resultado = ventaService.ListarTodasLasVentas();
-            if (resultado.Count > 0) { return resultado; }
-            else
-                return BadRequest(new { message = $"No existen ventas en esta lista ", StatusCode = 400 });
-        }
-
-        [HttpDelete("BorrarVentaVendidoXId")]
-        public ActionResult<Ventum> BorrarVentaVendidoXId(int id)
-        {
-            if (id < 0) return BadRequest(new { message = $"El id no puede ser negativo ", StatusCode = 400 });
-            var ventaBuscada = ventaService.ObtenerVentaXId(id);
-            if (ventaBuscada is null) return BadRequest(new { message = $"El Venta no existe ", StatusCode = 400 });
-            ventaService.EliminarVentaPorId(ventaBuscada);
-            return Ok(new { message = $"Venta {id} eliminado exitosamente", StatusCode = 200 });
-
-        }
-
-        [HttpPost("AgregarVenta")]
-        public ActionResult AgregarVenta([FromBody] VentaDTO ventaDto)
-        {
-            if (ventaDto == null)
+     
+        [HttpPost("CrearVenta")]
+        public ActionResult CrearVenta(int idUsuario, [FromBody] List<ProductoDTO> productos)
+        { 
+            
+            if (productos.Count == 0) return BadRequest("La lista de Productos esta vacia");
+            try
             {
-                return BadRequest("El campo 'Id venta' es obligatorio.");
+                var result = ventaService.AgregarNuevaVenta(idUsuario, productos);
+                return Ok(result);
             }
-            ventaService.AgregarVenta(ventaDto);
-            return Ok(new { message = $"Venta Vendido: {ventaDto.Id} agregado exitosamente" });
-        }
+            catch { return BadRequest("Fallo la creación de la venta."); };
+            }
 
-
-        [HttpPut("ModificarVenta")]
-        public ActionResult<VentaDTO> ModificarVenta([FromBody] VentaDTO ventaDto)
-        {
-            if (ventaDto is null) return BadRequest(new { message = $"La venta no puede estar vacia.", StatusCode = 400 });
-            this.ventaService.ModificarVenta(ventaDto);
-            return Ok(new { message = $"Venta {ventaDto.Id} Modificado exitosamente", StatusCode = 200 });
-        }
+     
     }
 }

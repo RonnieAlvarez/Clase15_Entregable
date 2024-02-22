@@ -1,55 +1,111 @@
-﻿using Clase15_Entregable.database;
-using Clase15_Entregable.DTOs;
-using Clase15_Entregable.Mapper;
-using Clase15_Entregable.models;
+﻿using Proyecto_Final_API_SDG.DTOs;
+using Proyecto_Final_API_SDG.Mapper;
+using Proyecto_Final_API_SDG.models;
+using Proyecto_Final_API_SDG.database;
+using Proyecto_Final_API_SDG.Service;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
-namespace Clase15_Entregable.Service
+namespace Proyecto_Final_API_SDG.Service
 {
     public class VentaService
     {
         private CoderContext coderContext;
-
+     
         public VentaService(CoderContext coderContext)
         {
             this.coderContext = coderContext;
         }
 
-        public List<Ventum> ListarTodasLasVentas()
+        private List<Ventum> ListarTodasLasVentas()
         {
             return coderContext.Venta.ToList();
         }
 
-        public Ventum? ObtenerVentaXId(int id)
+        public List<VentaDTO> ObtenerVentaXIdUsuario(int id)
         {
-            return coderContext.Venta.FirstOrDefault(u => u.Id == id);
-        }
- 
-        public bool EliminarVentaPorId(Ventum venta)
-        {
-            coderContext.Venta.Remove(venta);
-            coderContext.SaveChanges();
-            return true;
-        }
-
-        public bool AgregarVenta(VentaDTO dto)
-        {
-            if (dto is null)
+            var lista = ListarTodasLasVentas();
+            List<VentaDTO> listadoxID = new List<VentaDTO>();
+            foreach (var item in lista)
             {
-                return false;
+                if (item.IdUsuario == id)
+                {
+                    VentaDTO venta = VentaMapper.MappearVtaToDto(item);
+                    listadoxID.Add(venta);
+                }
             }
-            Ventum venta = VentaMapper.MappearDtoToVenta(dto);
-            coderContext.Venta.Add(venta);
-            coderContext.SaveChanges();
-            return true;
-
+            return listadoxID;
         }
-
-        public bool ModificarVenta(VentaDTO dto)
+    
+        public ActionResult<bool> AgregarNuevaVenta(int idUsuario, List<ProductoDTO> productos)
         {
-            Ventum venta = VentaMapper.MappearDtoToVenta(dto);
-            coderContext.Venta.Update(venta);
-            coderContext.SaveChanges();
+            foreach (var item in productos)
+            {
+                VentaDTO venta = new VentaDTO();
+                venta.Comentarios = "Venta realizado por: " + idUsuario.ToString();
+                venta.IdUsuario = idUsuario;
+                Ventum auxVentaMapeada = VentaMapper.MappearDtoToVenta(venta);
+                coderContext.Venta.Add(auxVentaMapeada);
+                coderContext.SaveChanges();
+                coderContext.Venta.AsTracking();
+                int ventaId = auxVentaMapeada.Id;
+                RegistrarProductosVendidos(item, ventaId);
+                var contsId = coderContext.ContextId;
+                
+                ActualizaStockProductosVendidos(item);
+            }
             return true;
         }
+
+        private bool ActualizaStockProductosVendidos(ProductoDTO productos)
+        {
+         
+            Producto productoActual = coderContext.Productos.AsNoTracking().First(pa=>pa.Id==productos.Id);
+            ProductoDTO productoDTO = ProductoMapper.MappearProdToDto(productoActual);
+            productoDTO.Stock = productoActual.Stock - productos.Stock;
+
+            Producto producto = ProductoMapper.MappearDtoToProd(productoDTO);
+            //coderContext.Productos.Remove(productoActual);
+            coderContext.Productos.Update(producto);
+            coderContext.SaveChanges();
+            //productoService.ModificarProducto(productoDTO);
+
+
+            //  });
+            return true;
+        }
+
+        private bool RegistrarProductosVendidos(ProductoDTO producto, int idVenta)
+        {
+
+            ProductoVendidoDTO productoVendidoDTO = new ProductoVendidoDTO();
+            productoVendidoDTO.IdProducto = producto.Id;
+            productoVendidoDTO.IdVenta = idVenta;
+            productoVendidoDTO.Stock = producto.Stock;
+
+            ProductoVendido productoVendido = ProductoVendidoMapper.MapperDtoToPV(productoVendidoDTO);
+            coderContext.ProductoVendidos.Add(productoVendido);
+            coderContext.SaveChanges();
+
+            return true;
+        }
+
+            //private bool RegistrarProductosVendidos(List<ProductoDTO> productos, int idVenta)
+            //{
+            //    productos.ForEach(p =>
+            //    {
+            //        ProductoVendidoDTO productoVendidoDTO = new ProductoVendidoDTO();
+            //        productoVendidoDTO.IdProducto = p.Id;
+            //        productoVendidoDTO.IdVenta = idVenta;
+            //        productoVendidoDTO.Stock = p.Stock;
+
+            //        ProductoVendido productoVendido = ProductoVendidoMapper.MapperDtoToPV(productoVendidoDTO);
+            //        coderContext.ProductoVendidos.Add(productoVendido);
+            //        coderContext.SaveChanges();
+            //    });
+            //    return true;
+
+
+            //}
     }
 }

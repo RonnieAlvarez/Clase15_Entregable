@@ -1,4 +1,4 @@
-﻿namespace Clase15_Entregable.DTOs
+﻿namespace Proyecto_Final_API_SDG.DTOs
 {
     public class UsuarioDTO
     {

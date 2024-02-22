@@ -1,11 +1,12 @@
-﻿using Clase15_Entregable.database;
-using Clase15_Entregable.models;
-using Clase15_Entregable.DTOs;
-using Clase15_Entregable.Service;
+﻿using Proyecto_Final_API_SDG.database;
+using Proyecto_Final_API_SDG.models;
+using Proyecto_Final_API_SDG.DTOs;
+using Proyecto_Final_API_SDG.Service;
 using Microsoft.AspNetCore.Mvc;
-using Clase15_Entregable.Mapper;
+using Proyecto_Final_API_SDG.Mapper;
+using Microsoft.AspNetCore.Http;
 
-namespace Clase15_Entregable.Controllers
+namespace Proyecto_Final_API_SDG.Controllers
 {
     [ApiController]
     [Route("api/[Controller]")]
@@ -27,6 +28,28 @@ namespace Clase15_Entregable.Controllers
             else return usuarioBuscado;
         }
 
+        [HttpGet("obtenerUsuarioXNommbreUsuario/{nombreUsuario}")]
+        public ActionResult<Usuario?> obtenerUsuarioXNombreUsuario(string nombreUsuario)
+        {
+            if (string.IsNullOrWhiteSpace(nombreUsuario)) return BadRequest(new { message = $"El Nombre Usuario no puede estar vacio ", StatusCode = 400 });
+            var usuarioBuscado = usuarioService.ObtenerUsuarioXNombreUsuario(nombreUsuario);
+            if (usuarioBuscado is null) return BadRequest(new { message = $"El Usuario no existe ", StatusCode = 400 });
+            else return usuarioBuscado;
+        }
+
+        [HttpGet("obtenerUsuarioXUsuarioClave/{nombreUsuario}/{contrasena}")]
+        public ActionResult<Usuario?> obtenerUsuarioXUsuarioClave(string nombreUsuario, string contrasena)
+        {
+            if (string.IsNullOrWhiteSpace(nombreUsuario) || string.IsNullOrWhiteSpace(contrasena)) return BadRequest(new { message = $"Los datos no pueden estar vacios ", StatusCode = 400 });
+            try
+            {
+                return  usuarioService.ObtenerUsuarioXUsuarioClave(nombreUsuario, contrasena);
+            }
+            catch
+            {
+                return BadRequest(new { message = $"El Usuario no existe ", StatusCode = 400 });
+            }
+        }
         [HttpGet("obtenerTodosLosUsuarios")]
         public ActionResult<List<Usuario>> obtenerTodosLosUsuarios()
         {

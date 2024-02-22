@@ -1,7 +1,9 @@
-﻿using Clase15_Entregable.database;
-using Clase15_Entregable.models;
+﻿using Proyecto_Final_API_SDG.models;
+using Proyecto_Final_API_SDG.database;
+using Microsoft.AspNetCore.Mvc;
+using Proyecto_Final_API_SDG.DTOs;
 
-namespace Clase15_Entregable.Service
+namespace Proyecto_Final_API_SDG.Service
 {
     public class UsuarioService
     {
@@ -39,6 +41,16 @@ namespace Clase15_Entregable.Service
             coderContext.Usuarios.Update(usuario);
             coderContext.SaveChanges();
             return true;
+        }
+
+        public ActionResult<Usuario?> ObtenerUsuarioXNombreUsuario(string nombreUsuario)
+        {
+            return coderContext.Usuarios.FirstOrDefault(u => u.NombreUsuario.Equals(nombreUsuario));
+        }
+
+        internal ActionResult<Usuario?> ObtenerUsuarioXUsuarioClave(string usuario, string clave)
+        {
+            return coderContext.Usuarios.FirstOrDefault(u=>u.NombreUsuario.Equals(usuario)&&u.Contraseña.Equals(clave));
         }
     }
 }

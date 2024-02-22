@@ -1,9 +1,9 @@
-﻿using Clase15_Entregable.database;
-using Clase15_Entregable.DTOs;
-using Clase15_Entregable.Mapper;
-using Clase15_Entregable.models;
+﻿using Proyecto_Final_API_SDG.DTOs;
+using Proyecto_Final_API_SDG.Mapper;
+using Proyecto_Final_API_SDG.models;
+using Proyecto_Final_API_SDG.database;
 
-namespace Clase15_Entregable.Service
+namespace Proyecto_Final_API_SDG.Service
 {
     public class ProductoVendidoService
     {
@@ -18,44 +18,31 @@ namespace Clase15_Entregable.Service
         {
             return coderContext.ProductoVendidos.ToList();
         }
-        /* public List<ProductoVendido> ListarProductosVendidosXId(int idUsuario)
-         {
-             var productos = coderContext.Productos.ToList();
-             var productosVendidos = ListarTodosLosProductosVendidos();
-
-             var resultadoFinal = productos
-                 .Where(p => p.IdUsuario == idUsuario)
-                 .Join(productosVendidos,
-                     producto => producto.Id,
-                     vendido => vendido.IdProducto,
-                     (producto, vendido) => vendido)
-                 .ToList();
-
-             return resultadoFinal;
-         }
-        */
-        public List<ProductoVendido> ListarPVxIdProducto(int idProducto) {
-            return coderContext.ProductoVendidos.Where(p=> p.IdProducto == idProducto).ToList();
+       
+        public List<ProductoVendido> ListarPVxIdProducto(int idProducto)
+        {
+            return coderContext.ProductoVendidos.Where(p => p.IdProducto == idProducto).ToList();
         }
-        public List<ProductoVendidoDTO> ListarProductosVendidosXId(int idUsuario,int idProducto)
+        public List<ProductoVendidoDTO> ListarProductosVendidosXId(int idUsuario)
         {
             var productos = coderContext.Productos.ToList();
             var Productosfiltrados = productos.Where(u => u.IdUsuario == idUsuario).ToList();
-            var productosVendidos = coderContext.ProductoVendidos.Where(p=>p.IdProducto==idProducto).ToList();
+            var productosVendidos = coderContext.ProductoVendidos.Where(p => p.IdVenta == idUsuario).ToList();
 
             var resultadoFinal = new List<ProductoVendidoDTO>();
             foreach (var item in productosVendidos)
             {
                 resultadoFinal.Add(ProductoVendidoMapper.MapperPvToDto(item));
             }
-         
-           return resultadoFinal;
+
+            return resultadoFinal;
         }
 
         public ProductoVendido? ObtenerProductosVendidosXId(int id)
         {
             return coderContext.ProductoVendidos.FirstOrDefault(u => u.Id == id);
         }
+
         public bool EliminarProductoVendidoPorId(ProductoVendido productoVendido)
         {
             coderContext.ProductoVendidos.Remove(productoVendido);
