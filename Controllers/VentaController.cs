@@ -26,7 +26,7 @@ namespace Proyecto_Final_API_SDG.Controllers
         }
 
      
-        [HttpPost("CrearVenta")]
+        [HttpPost("CrearVenta/{idUsuario:int}")]
         public ActionResult CrearVenta(int idUsuario, [FromBody] List<ProductoDTO> productos)
         { 
             
@@ -34,7 +34,7 @@ namespace Proyecto_Final_API_SDG.Controllers
             try
             {
                 var result = ventaService.AgregarNuevaVenta(idUsuario, productos);
-                return Ok(result);
+                return Ok(new { message = $"Venta agregada Correctamente ", StatusCode = 200 });
             }
             catch { return BadRequest("Fallo la creación de la venta."); };
             }

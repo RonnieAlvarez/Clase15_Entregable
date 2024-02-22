@@ -67,10 +67,6 @@ namespace Proyecto_Final_API_SDG.Service
             
             coderContext.Productos.Update(producto);
             coderContext.SaveChanges();
-            //productoService.ModificarProducto(productoDTO);
-
-
-            //  });
             return true;
         }
 

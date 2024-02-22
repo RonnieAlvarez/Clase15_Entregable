@@ -49,7 +49,7 @@ namespace Proyecto_Final_API_SDG
 
             app.UseHttpsRedirection();
 
-           // app.UseAuthorization();
+            app.UseAuthorization();
 
             app.MapControllers();
 

@@ -7,8 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="SistemaDeGestionWFApp\SistemaGestionApp.csproj" />
-    <None Include="SistemaDeGestionWFApp\SistemaGestionApp.csproj.user" />
+    <Compile Remove="SistemaDeGestionWFApp\**" />
+    <Content Remove="SistemaDeGestionWFApp\**" />
+    <EmbeddedResource Remove="SistemaDeGestionWFApp\**" />
+    <None Remove="SistemaDeGestionWFApp\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -19,10 +21,6 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="SistemaDeGestionWFApp\obj\x86\Debug\TempPE\" />
   </ItemGroup>
 
 </Project>
