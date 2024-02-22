@@ -50,7 +50,6 @@ namespace Proyecto_Final_API_SDG.Service
                 coderContext.Venta.AsTracking();
                 int ventaId = auxVentaMapeada.Id;
                 RegistrarProductosVendidos(item, ventaId);
-                var contsId = coderContext.ContextId;
                 
                 ActualizaStockProductosVendidos(item);
             }
@@ -59,13 +58,13 @@ namespace Proyecto_Final_API_SDG.Service
 
         private bool ActualizaStockProductosVendidos(ProductoDTO productos)
         {
-         
+            //https://learn.microsoft.com/es-es/ef/core/querying/tracking
             Producto productoActual = coderContext.Productos.AsNoTracking().First(pa=>pa.Id==productos.Id);
             ProductoDTO productoDTO = ProductoMapper.MappearProdToDto(productoActual);
             productoDTO.Stock = productoActual.Stock - productos.Stock;
 
             Producto producto = ProductoMapper.MappearDtoToProd(productoDTO);
-            //coderContext.Productos.Remove(productoActual);
+            
             coderContext.Productos.Update(producto);
             coderContext.SaveChanges();
             //productoService.ModificarProducto(productoDTO);
