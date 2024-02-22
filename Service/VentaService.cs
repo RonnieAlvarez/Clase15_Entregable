@@ -59,6 +59,7 @@ namespace Proyecto_Final_API_SDG.Service
         private bool ActualizaStockProductosVendidos(ProductoDTO productos)
         {
             //https://learn.microsoft.com/es-es/ef/core/querying/tracking
+
             Producto productoActual = coderContext.Productos.AsNoTracking().First(pa=>pa.Id==productos.Id);
             ProductoDTO productoDTO = ProductoMapper.MappearProdToDto(productoActual);
             productoDTO.Stock = productoActual.Stock - productos.Stock;
@@ -85,22 +86,6 @@ namespace Proyecto_Final_API_SDG.Service
             return true;
         }
 
-            //private bool RegistrarProductosVendidos(List<ProductoDTO> productos, int idVenta)
-            //{
-            //    productos.ForEach(p =>
-            //    {
-            //        ProductoVendidoDTO productoVendidoDTO = new ProductoVendidoDTO();
-            //        productoVendidoDTO.IdProducto = p.Id;
-            //        productoVendidoDTO.IdVenta = idVenta;
-            //        productoVendidoDTO.Stock = p.Stock;
-
-            //        ProductoVendido productoVendido = ProductoVendidoMapper.MapperDtoToPV(productoVendidoDTO);
-            //        coderContext.ProductoVendidos.Add(productoVendido);
-            //        coderContext.SaveChanges();
-            //    });
-            //    return true;
-
-
-            //}
+       
     }
 }
